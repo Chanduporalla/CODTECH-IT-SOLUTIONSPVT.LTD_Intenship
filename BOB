@@ -1,0 +1,95 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class WeatherDashboard extends JFrame {
+
+    private JTextField cityField;
+    private JButton submitButton;
+    private JTextArea resultArea;
+    private JLabel titleLabel;
+
+    public WeatherDashboard() {
+        setTitle("🌦 Weather Dashboard 🌈");
+        setSize(600, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // 🎨 Title
+        titleLabel = new JLabel("🌍 Enter City and Get Weather 🌍", JLabel.CENTER);
+        titleLabel.setFont(new Font("Verdana", Font.BOLD, 22));
+        titleLabel.setForeground(new Color(0, 102, 204));
+
+        // City Input
+        cityField = new JTextField(20);
+        cityField.setFont(new Font("Arial", Font.PLAIN, 18));
+        cityField.setBackground(new Color(255, 255, 204));
+        cityField.setForeground(Color.BLACK);
+
+        // Submit Button
+        submitButton = new JButton("☁ Submit");
+        submitButton.setFont(new Font("Arial", Font.BOLD, 18));
+        submitButton.setBackground(new Color(51, 153, 255));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFocusPainted(false);
+        submitButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        // Hover Effect
+        submitButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                submitButton.setBackground(new Color(0, 102, 204));
+            }
+            public void mouseExited(MouseEvent evt) {
+                submitButton.setBackground(new Color(51, 153, 255));
+            }
+        });
+
+        // Weather Info Area (Center aligned)
+        resultArea = new JTextArea();
+        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 18));
+        resultArea.setBackground(new Color(230, 247, 255));
+        resultArea.setForeground(Color.DARK_GRAY);
+        resultArea.setEditable(false);
+        resultArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+
+        // Make text center aligned using Styled text pane wrapper
+        JScrollPane scrollPane = new JScrollPane(resultArea);
+        scrollPane.setPreferredSize(new Dimension(550, 300));
+
+        // Layout
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(cityField);
+        inputPanel.add(submitButton);
+
+        setLayout(new BorderLayout(15, 15));
+        add(titleLabel, BorderLayout.NORTH);
+        add(inputPanel, BorderLayout.SOUTH);  // Input at bottom
+        add(scrollPane, BorderLayout.CENTER); // Weather display in center
+
+        // 🔘 Action when Submit is clicked
+        submitButton.addActionListener(e -> {
+            String city = cityField.getText().trim();
+            if (!city.isEmpty()) {
+                fetchWeather(city);
+            } else {
+                resultArea.setText("⚠ Please enter a city name.");
+            }
+        });
+    }
+
+    // 🌤 Fake Weather Fetcher (replace with API later if needed)
+    private void fetchWeather(String city) {
+        resultArea.setText(""); // clear previous
+        resultArea.append("📍 City: " + city + "\n\n");
+        resultArea.append("🌡 Temperature: " + (20 + (int)(Math.random()*10)) + " °C\n");
+        resultArea.append("💧 Humidity: " + (40 + (int)(Math.random()*40)) + "%\n");
+        resultArea.append("🌬 Wind Speed: " + (5 + (int)(Math.random()*15)) + " km/h\n");
+        resultArea.append("⛅ Condition: " + (Math.random() > 0.5 ? "☀ Sunny" : "🌧 Rainy") + "\n");
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new WeatherDashboard().setVisible(true);
+        });
+    }
+}
